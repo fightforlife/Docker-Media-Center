@@ -1,0 +1,14 @@
+#koditest:latest
+FROM ubuntu:rolling
+
+RUN apt update && apt upgrade
+RUN apt install -y software-properties-common
+RUN apt install -y wget gpg
+RUN wget -qO- https://apt.hyperion-project.org/hyperion.pub.key | gpg --dearmor -o /usr/share/keyrings/hyperion.pub.gpg
+RUN echo "deb [signed-by=/usr/share/keyrings/hyperion.pub.gpg] https://apt.hyperion-project.org/ $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hyperion.list
+RUN apt-get update && apt-get install -y hyperion
+
+RUN useradd --create-home --shell /bin/bash hyperion
+USER hyperion
+
+CMD ["/bin/bash", "-c", "hyperiond"]

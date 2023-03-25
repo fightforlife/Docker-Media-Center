@@ -1,0 +1,12 @@
+#koditest:latest
+FROM ubuntu:rolling
+
+RUN apt update && apt upgrade
+RUN apt install -y software-properties-common
+RUN add-apt-repository -y ppa:team-xbmc/ppa
+RUN apt install -y kodi
+
+RUN useradd --create-home --shell /bin/bash kodi
+USER kodi
+
+CMD ["/bin/bash", "-c", "kodi-standalone"]

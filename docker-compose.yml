@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  kodi:
+    image: ghcr.io/fightforlife/kodi:latest
+    ipc: host
+    environment:
+      - DISPLAY=:0
+    devices:
+      - /dev/snd:/dev/snd
+      - /dev/dri/card0:/dev/dri/card0
+      - /dev/dri/renderD128:/dev/dri/renderD128
+    group_add:
+      - audio
+      - video
+      - dialout
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - kodi:/home/kodi
+      
+  hyperion:
+    image: ghcr.io/fightforlife/hyperion:latest
+    ipc: host
+    environment:
+      - DISPLAY=:0
+    ports:
+      - 8090:8090
+    devices:
+      - /dev/dri/card0:/dev/dri/card0
+      - /dev/dri/renderD128:/dev/dri/renderD128
+    group_add:
+      - video
+      - dialout
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - hyperion:/home/hyperion
+volumes:
+  kodi:
+  hyperion:
