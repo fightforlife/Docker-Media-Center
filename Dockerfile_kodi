@@ -4,7 +4,7 @@ FROM ubuntu:rolling
 RUN apt update && apt upgrade
 RUN apt install -y software-properties-common
 RUN add-apt-repository -y ppa:team-xbmc/ppa
-RUN apt install -y kodi
+RUN apt install -y kodi kodi-inputstream-ffmpegdirect
 
 RUN useradd --create-home --shell /bin/bash kodi
 USER kodi
