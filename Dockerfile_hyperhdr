@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 
 RUN apt update && apt upgrade -y
-RUN apt install -y curl lsb-release --no-install-recommends
+RUN apt install -y ca-certificates curl lsb-release --no-install-recommends
 RUN curl -fsSL https://awawa-dev.github.io/hyperhdr.public.apt.gpg.key | dd of=/usr/share/keyrings/hyperhdr.public.apt.gpg.key
 RUN chmod go+r /usr/share/keyrings/hyperhdr.public.apt.gpg.key
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hyperhdr.public.apt.gpg.key] https://awawa-dev.github.io $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hyperhdr.list > /dev/null
