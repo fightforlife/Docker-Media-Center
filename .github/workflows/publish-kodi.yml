@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Publish Docker image
+name: Publish Kodi
 
 on: 
   #for manual start
@@ -21,10 +21,6 @@ jobs:
         include:
           - dockerfile: ./Dockerfile_kodi
             image: ghcr.io/${{ github.actor }}/kodi
-          - dockerfile: ./Dockerfile_hyperion
-            image: ghcr.io/${{ github.actor }}/hyperion
-          - dockerfile: ./Dockerfile_hyperhdr
-            image: ghcr.io/${{ github.actor }}/hyperhdr
     permissions:
       contents: read
       packages: write
