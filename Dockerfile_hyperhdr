@@ -1,0 +1,15 @@
+FROM lsiobase/ubuntu:jammy
+
+RUN apt update && apt upgrade -y
+RUN apt install -y curl lsb-release --no-install-recommends
+RUN curl -fsSL https://awawa-dev.github.io/hyperhdr.public.apt.gpg.key | dd of=/usr/share/keyrings/hyperhdr.public.apt.gpg.key
+RUN chmod go+r /usr/share/keyrings/hyperhdr.public.apt.gpg.key
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hyperhdr.public.apt.gpg.key] https://awawa-dev.github.io $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hyperhdr.list > /dev/null
+RUN apt update
+RUN apt install hyperhdr -y
+
+
+RUN useradd --create-home --shell /bin/bash hyperhdr
+USER hyperhdr
+
+CMD ["/bin/bash", "-c", "hyperhdr"]

@@ -23,6 +23,8 @@ jobs:
             image: ghcr.io/${{ github.actor }}/kodi
           - dockerfile: ./Dockerfile_hyperion
             image: ghcr.io/${{ github.actor }}/hyperion
+          - dockerfile: ./Dockerfile_hyperhdr
+            image: ghcr.io/${{ github.actor }}/hyperhdr
     permissions:
       contents: read
       packages: write
