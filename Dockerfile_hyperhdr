@@ -1,15 +1,34 @@
+#based on https://github.com/awawa-dev/HyperHDR/discussions/594
+
 FROM ubuntu:latest
 
-RUN apt update && apt upgrade -y
-RUN apt install -y ca-certificates curl lsb-release --no-install-recommends
-RUN curl -fsSL https://awawa-dev.github.io/hyperhdr.public.apt.gpg.key | dd of=/usr/share/keyrings/hyperhdr.public.apt.gpg.key
-RUN chmod go+r /usr/share/keyrings/hyperhdr.public.apt.gpg.key
-RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hyperhdr.public.apt.gpg.key] https://awawa-dev.github.io $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hyperhdr.list > /dev/null
-RUN apt update
-RUN apt install hyperhdr -y
+#add user
+RUN groupadd -f hyperhdr && \
+    adduser -q --uid ${UID:-1000} --gid ${GID:-1000} --disabled-password hyperhdr && \
+    usermod -a -G dialout hyperhdr && \
+    chown ${UID:-1000}:${GID:-1000} /home/hyperhdr
 
+#install preconditions
+RUN apt update && apt upgrade -y && \
+    apt install wget gpg sudo curl dpkg lsb-release -y
 
-RUN useradd --create-home --shell /bin/bash hyperhdr
+#add repository
+RUN wget -qO /usr/share/keyrings/hyperhdr.public.apt.gpg.key https://awawa-dev.github.io/hyperhdr.public.apt.gpg.key && \
+    chmod go+r /usr/share/keyrings/hyperhdr.public.apt.gpg.key && \
+    echo \"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hyperhdr.public.apt.gpg.key] https://awawa-dev.github.io $(lsb_release -cs) main\" > /etc/apt/sources.list.d/hyperhdr.list
+
+#install hyperhdr
+RUN apt update && \
+    apt install hyperhdr -y && \
+    apt-get clean
+
+VOLUME /home/hyperhdr
+EXPOSE 19400
+EXPOSE 19444
+EXPOSE 19445
+EXPOSE 8090
+EXPOSE 8092
+
 USER hyperhdr
-
-CMD ["/bin/bash", "-c", "hyperhdr"]
+ENTRYPOINT ["hyperhdr"]
+CMD ["-v", "--service"]
